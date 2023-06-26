@@ -37,6 +37,20 @@ pub fn build(b: *std.build.Builder) !void {
 
         const run_step_playground = b.step(b.fmt("run-{s}", .{day_number}), b.fmt("Run day {s}", .{day_number}));
         run_step_playground.dependOn(&run_cmd.step);
+
+        const unit_tests = b.addTest(.{
+            .root_source_file = exe.root_src.?,
+            .target = exe.target,
+            .optimize = exe.optimize,
+        });
+
+        const run_unit_tests = b.addRunArtifact(unit_tests);
+
+        // Similar to creating the run step earlier, this exposes a `test` step to
+        // the `zig build --help` menu, providing a way for the user to request
+        // running the unit tests.
+        const test_step = b.step(b.fmt("test-{s}", .{day_number}), "Run unit tests");
+        test_step.dependOn(&run_unit_tests.step);
     }
 
     {
