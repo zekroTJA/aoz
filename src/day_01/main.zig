@@ -10,14 +10,14 @@ pub fn main() !void {
 
     var elfs = std.mem.split(u8, input, "\n\n");
 
-    var elf_calories = std.ArrayList(std.BoundedArray(u32, 500)).init(alloc);
-    defer elf_calories.deinit();
+    var elfCalories = std.ArrayList(std.BoundedArray(u32, 500)).init(alloc);
+    defer elfCalories.deinit();
 
     while (elfs.next()) |elf| {
         var calories = std.BoundedArray(u32, 500).init(0) catch unreachable;
 
-        var elf_split = std.mem.split(u8, elf, "\n");
-        while (elf_split.next()) |line| {
+        var elfSplit = std.mem.split(u8, elf, "\n");
+        while (elfSplit.next()) |line| {
             if (line.len == 0) {
                 continue;
             }
@@ -25,12 +25,12 @@ pub fn main() !void {
             try calories.append(cal);
         }
 
-        try elf_calories.append(calories);
+        try elfCalories.append(calories);
     }
 
-    part1(elf_calories.items);
+    part1(elfCalories.items);
 
-    try part2(alloc, elf_calories.items);
+    try part2(alloc, elfCalories.items);
 }
 
 fn part1(elfs: []const std.BoundedArray(u32, 500)) void {
@@ -50,7 +50,7 @@ fn part1(elfs: []const std.BoundedArray(u32, 500)) void {
 }
 
 fn part2(alloc: std.mem.Allocator, elfs: []const std.BoundedArray(u32, 500)) !void {
-    var total_sum: u32 = 0;
+    var totalSum: u32 = 0;
 
     var sums = std.ArrayList(u32).init(alloc);
     defer sums.deinit();
@@ -66,8 +66,8 @@ fn part2(alloc: std.mem.Allocator, elfs: []const std.BoundedArray(u32, 500)) !vo
     std.sort.block(u32, sums.items, {}, comptime std.sort.desc(u32));
 
     for (sums.items[0..3]) |i| {
-        total_sum += i;
+        totalSum += i;
     }
 
-    debug.print("part2: {d}\n", .{total_sum});
+    debug.print("part2: {d}\n", .{totalSum});
 }

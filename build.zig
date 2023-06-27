@@ -12,13 +12,13 @@ pub fn build(b: *std.build.Builder) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     const dirs = try std.fs.cwd().openIterableDir("./src", .{});
-    var dirs_iter = dirs.iterate();
+    var dirsIter = dirs.iterate();
 
     const utilModule = b.addModule("util", .{
         .source_file = .{ .path = "./src/util/util.zig" },
     });
 
-    while (try dirs_iter.next()) |path| {
+    while (try dirsIter.next()) |path| {
         if (path.kind != .directory) {
             continue;
         }
@@ -26,11 +26,11 @@ pub fn build(b: *std.build.Builder) !void {
             continue;
         }
 
-        var name_split = std.mem.splitBackwards(u8, path.name, "_");
-        var day_number = name_split.next().?;
+        var nameSplit = std.mem.splitBackwards(u8, path.name, "_");
+        var dayNumber = nameSplit.next().?;
 
         const exe = b.addExecutable(.{
-            .name = b.fmt("day_{s}", .{day_number}),
+            .name = b.fmt("day_{s}", .{dayNumber}),
             .root_source_file = .{ .path = b.fmt("src/{s}/main.zig", .{path.name}) },
             .target = target,
             .optimize = optimize,
@@ -39,24 +39,24 @@ pub fn build(b: *std.build.Builder) !void {
         exe.addModule("util", utilModule);
 
         b.installArtifact(exe);
-        const run_cmd = b.addRunArtifact(exe);
+        const runCmd = b.addRunArtifact(exe);
 
-        const run_step_playground = b.step(b.fmt("run-{s}", .{day_number}), b.fmt("Run day {s}", .{day_number}));
-        run_step_playground.dependOn(&run_cmd.step);
+        const runStepPlayground = b.step(b.fmt("run-{s}", .{dayNumber}), b.fmt("Run day {s}", .{dayNumber}));
+        runStepPlayground.dependOn(&runCmd.step);
 
-        const unit_tests = b.addTest(.{
+        const unitTests = b.addTest(.{
             .root_source_file = exe.root_src.?,
             .target = exe.target,
             .optimize = exe.optimize,
         });
 
-        const run_unit_tests = b.addRunArtifact(unit_tests);
+        const runUnitTests = b.addRunArtifact(unitTests);
 
         // Similar to creating the run step earlier, this exposes a `test` step to
         // the `zig build --help` menu, providing a way for the user to request
         // running the unit tests.
-        const test_step = b.step(b.fmt("test-{s}", .{day_number}), "Run unit tests");
-        test_step.dependOn(&run_unit_tests.step);
+        const testStep = b.step(b.fmt("test-{s}", .{dayNumber}), "Run unit tests");
+        testStep.dependOn(&runUnitTests.step);
     }
 
     {
@@ -68,9 +68,9 @@ pub fn build(b: *std.build.Builder) !void {
         });
 
         b.installArtifact(exe);
-        const run_cmd = b.addRunArtifact(exe);
+        const runCmd = b.addRunArtifact(exe);
 
-        const run_step_playground = b.step("playground", "Run playground");
-        run_step_playground.dependOn(&run_cmd.step);
+        const runStepPlayground = b.step("playground", "Run playground");
+        runStepPlayground.dependOn(&runCmd.step);
     }
 }

@@ -44,7 +44,7 @@ const Shape = enum(u8) {
         };
     }
 
-    fn for_result(self: Shape, res: Result) Shape {
+    fn forResult(self: Shape, res: Result) Shape {
         return switch (self) {
             .Rock => switch (res) {
                 .Win => .Paper,
@@ -98,8 +98,8 @@ pub fn main() !void {
     var outcomes = std.ArrayList(struct { Shape, Result }).init(alloc);
     defer outcomes.deinit();
 
-    var lines_split = mem.split(u8, input, "\n");
-    while (lines_split.next()) |line| {
+    var linesSplit = mem.split(u8, input, "\n");
+    while (linesSplit.next()) |line| {
         if (line.len == 0) continue;
 
         var pair_split = mem.split(u8, line, " ");
@@ -132,7 +132,7 @@ fn part2(outcomes: []const struct { Shape, Result }) void {
     var sum: u32 = 0;
     for (outcomes) |outcome| {
         const r = outcome[1];
-        const s = outcome[0].for_result(r);
+        const s = outcome[0].forResult(r);
         sum += @intFromEnum(s) + @intFromEnum(r);
     }
 
