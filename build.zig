@@ -14,6 +14,10 @@ pub fn build(b: *std.build.Builder) !void {
     const dirs = try std.fs.cwd().openIterableDir("./src", .{});
     var dirs_iter = dirs.iterate();
 
+    const utilModule = b.addModule("util", .{
+        .source_file = .{ .path = "./src/util/util.zig" },
+    });
+
     while (try dirs_iter.next()) |path| {
         if (path.kind != .directory) {
             continue;
@@ -31,6 +35,8 @@ pub fn build(b: *std.build.Builder) !void {
             .target = target,
             .optimize = optimize,
         });
+
+        exe.addModule("util", utilModule);
 
         b.installArtifact(exe);
         const run_cmd = b.addRunArtifact(exe);
