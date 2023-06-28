@@ -1,3 +1,5 @@
+set -e
+
 function run_day {
     echo "--------- $1 ---------"
     ./zig-out/bin/$1
