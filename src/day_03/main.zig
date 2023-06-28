@@ -66,7 +66,7 @@ fn part1(alloc: mem.Allocator, rucksacks: [][]const u8) !void {
         sum += try getPriosOfDupes(alloc, comp1, comp2);
     }
 
-    debug.print("part2: {d}\n", .{sum});
+    debug.print("part1: {d}\n", .{sum});
 }
 
 fn part2(rucksacks: [][]const u8) !void {
@@ -83,7 +83,7 @@ fn part2(rucksacks: [][]const u8) !void {
         }
     }
 
-    debug.print("part1: {d}\n", .{sum});
+    debug.print("part2: {d}\n", .{sum});
 }
 
 test "priority" {
