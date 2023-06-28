@@ -41,8 +41,8 @@ pub fn build(b: *std.build.Builder) !void {
         b.installArtifact(exe);
         const runCmd = b.addRunArtifact(exe);
 
-        const runStepPlayground = b.step(b.fmt("run-{s}", .{dayNumber}), b.fmt("Run day {s}", .{dayNumber}));
-        runStepPlayground.dependOn(&runCmd.step);
+        const runStep = b.step(b.fmt("day-{s}", .{dayNumber}), b.fmt("Run day {s}", .{dayNumber}));
+        runStep.dependOn(&runCmd.step);
 
         const unitTests = b.addTest(.{
             .root_source_file = exe.root_src.?,
